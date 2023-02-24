@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Practice Thymeleaf</title>
+</head>
+
+<body>
+    <div>
+        User name: <span th:text="${user.name}" th:assert="${!#strings.isEmpty(user.name)}"></span>
+    </div>
+    <br />
+
+     <div th:switch="${user.name}">
+           <span th:case="'Tom'">This is ${user.name} </span>
+           <span th:case="'Harry'">This is ${user.name}</span>
+     </div>
+     <br />
+
+     <div>
+         <span th:if="${user.name} == 'Tom'">This is Tom if condition</span>
+         <span th:if="${user.name} == 'Harry'">This is Harry if condition</span>
+     </div>
+     <br />
+
+      <div>
+          <span th:unless="${user.name} != 'Tom'">user name not equal unless state</span>
+      </div>
+      <br />
+
+     <table>
+         <caption>Users</caption>
+         <thead>
+         <thead>
+          <td>Name</td>
+          <td>Age</td>
+          <td>Date</td>
+         </thead>
+
+         <tr data-th-each="user : ${users}">
+             <td data-th-text="${user.name}"></td>
+             <td data-th-text="${user.age}"></td>
+             <td data-th-text="${#dates.format(user.date,'dd-MMM-yyyy')}"></td>
+         </tr>
+     </table>
+
+</body>
+</html>
