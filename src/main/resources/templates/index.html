@@ -1,31 +1,60 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Practice Thymeleaf</title>
-<!--    <link th:href="@{/css/style.css}" rel="stylesheet" />-->
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 
 </head>
 
-<body>
+<body class="container">
 <h2>Employees Information !!!</h2>
 
-<a th:href="@{/showNewEmployeeForm}" class="btn btn-primary">Add Employee</a>
-<table  class="table table-striped table-bordered">
+<a th:href="@{/showNewEmployeeForm}" class="btn btn-primary mb-3">Add Employee</a>
+<table  class=" table table-striped table-bordered">
     <tr>
         <th>Id</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Role</th>
+        <th><a th:href="@{'/page/'+ ${currentPage} + '?sortField=firstName&sortDir='+ ${reverseSort}} ">First Name</a> </th>
+        <th><a th:href="@{'/page/'+ ${currentPage}+ '?sortField=lastName&sortDir='+ ${reverseSort}} "> Last Name</a></th>
+        <th><a th:href="@{'/page/'+ ${currentPage}+ '?sortField=role&sortDir='+ ${reverseSort}}">Role</a> </th>
+        <th>Action</th>
     </tr>
     <tr th:each="emp : ${employeeList}">
         <td th:text="${emp.id}"></td>
         <td th:text="${emp.firstName}"></td>
         <td th:text="${emp.lastName}"></td>
         <td th:text="${emp.role}"></td>
+        <td ><a th:href="@{/showFormUpdate/{id}(id=${emp.id})}" class="btn btn-primary">update</a>
+            <a th:href="@{/deleteEmployee/{id}(id=${emp.id})}" class="btn btn-danger">delete</a>
+        </td>
     </tr>
 </table>
+<nav aria-label="Page navigation example" th:if="${totalPage >1}">
+    <ul class="pagination">
+
+        <li class="page-item">
+           <p class="page-link">Total/<span th:text="${totalItem}"></span></p>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link" href="#" th:if="${currentPage >1}" th:href="@{'/page/'+${currentPage -1}+'?sortField='+${sortField}+'&sortDir='+${sortDir}}"  aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item" th:each="i : ${#numbers.sequence(1,totalPage)}">
+            <a class="page-link" href="#" th:if="${currentPage != i}" th:href="@{'/page/'+${i}+ '?sortField='+${sortField}+ '&sortDir='+ ${sortDir}}">[[${i}]]</a>
+            <a class="page-link" th:unless="${currentPage !=i}"> [[${i}]] </a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link" href="#" th:if="${currentPage < totalPage}" th:href="@{'/page/'+${currentPage+1}+ '?sortField=' + ${sortField} + '&sortDir='+${sortDir}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+
+    <a type="button" sec:authorize="isAuthenticated()"  th:href="@{/logout}" class="btn btn-primary">logout</a>
+</nav>
 
 </body>
 </html>
